@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.5" />
+        <PackageReference Include="FluentValidation" Version="10.0.4" />
+        <PackageReference Include="Hangfire" Version="1.7.28" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\AtHomeProject.Data\AtHomeProject.Data.csproj" />
+    </ItemGroup>
+
+</Project>
