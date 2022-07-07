@@ -5,8 +5,6 @@
         <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
         <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
         <IsPackable>false</IsPackable>
-        <SpaRoot>ClientApp\</SpaRoot>
-        <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
 
         <!-- Set this to true if you enable server-side prerendering -->
         <BuildServerSideRenderer>false</BuildServerSideRenderer>
@@ -25,10 +23,8 @@
         <PackageReference Include="Autofac" Version="6.2.0" />
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
         <PackageReference Include="FluentValidation.AspNetCore" Version="10.0.4" />
-        <PackageReference Include="Hangfire.InMemory" Version="0.3.4" />
         <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="5.4.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.17" />
-        <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.13" />
         <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.6.4">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -48,28 +44,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <!-- Don't publish the SPA source files, but do show them in the project files list -->
-        <Content Remove="$(SpaRoot)**" />
-        <Content Remove="ClientApp\**" />
-        <Content Remove="wwwroot\**" />
-        <None Remove="$(SpaRoot)**" />
-        <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
-        <None Remove="ClientApp\**" />
         <None Remove="Logs\**" />
-        <None Remove="wwwroot\**" />
         <Content Remove="Logs\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <TypeScriptCompile Remove="ClientApp\**" />
         <TypeScriptCompile Remove="Controllers\**" />
-        <TypeScriptCompile Remove="wwwroot\**" />
-        <Compile Remove="ClientApp\**" />
         <Compile Remove="Logs\**" />
-        <Compile Remove="wwwroot\**" />
-        <EmbeddedResource Remove="ClientApp\**" />
         <EmbeddedResource Remove="Logs\**" />
-        <EmbeddedResource Remove="wwwroot\**" />
     </ItemGroup>
 
     <ItemGroup>

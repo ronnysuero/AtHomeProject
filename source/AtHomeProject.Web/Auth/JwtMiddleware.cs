@@ -1,27 +1,29 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using AtHomeProject.Domain.Interfaces;
+using AtHomeProject.Data.Interfaces;
 using AtHomeProject.Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using static System.Int32;
 
 namespace AtHomeProject.Web.Auth
 {
     public class JwtMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly IDeviceService _deviceService;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly AppSettings _appSettings;
 
-        public JwtMiddleware(RequestDelegate next, IOptions<AppSettings> appSettings, IDeviceService deviceService)
+        public JwtMiddleware(RequestDelegate next, IOptions<AppSettings> appSettings, IUnitOfWork unitOfWork)
         {
             _next = next;
-            _deviceService = deviceService;
+            _unitOfWork = unitOfWork;
             _appSettings = appSettings.Value;
         }
 
@@ -63,17 +65,15 @@ namespace AtHomeProject.Web.Auth
                 );
 
                 var jwtToken = (JwtSecurityToken)validatedToken;
-                var value = jwtToken.Claims.FirstOrDefault(x => x.Type == nameof(DeviceModel.SerialNumber))?.Value;
+                var value = jwtToken.Claims.FirstOrDefault(x => x.Type == nameof(ClaimTypes.Actor))?.Value;
 
                 if (!string.IsNullOrWhiteSpace(value))
                 {
                     // attach device to context on successful jwt validation
-                    context.Items["User"] = await _deviceService.GetBySerialNumberAsync(value);
-                    return;
+                    TryParse(value, out var userId);
+                    context.Items["User"] = await _unitOfWork.Users.FindAsync(f => f.Id == userId);
+                    context.Items["UserClaims"] = await _unitOfWork.UsersClaims.GetAsync(f => f.UserId == userId);
                 }
-
-                // attach default user to context on successful jwt validation
-                context.Items["User"] = _appSettings.DefaultCredentials;
             }
             catch
             {

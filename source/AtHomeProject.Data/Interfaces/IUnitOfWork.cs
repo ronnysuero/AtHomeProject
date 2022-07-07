@@ -6,12 +6,8 @@ namespace AtHomeProject.Data.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        IRepository<Device> Device { get; }
-
-        IRepository<SensorInput> SensorInput { get; }
-
-        IRepository<SensorAlert> SensorAlert { get; }
-
+        IRepository<Users> Users { get; }
+        IRepository<UsersClaims> UsersClaims { get; }
         Task<int> SaveAsync();
     }
 }

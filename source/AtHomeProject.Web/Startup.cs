@@ -6,14 +6,11 @@ using AtHomeProject.Domain.Validators;
 using AtHomeProject.Web.Auth;
 using AtHomeProject.Web.Extensions;
 using Autofac;
-using AutoMapper;
 using FluentValidation.AspNetCore;
-using Hangfire;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -49,11 +46,6 @@ namespace AtHomeProject.Web
                 o.UseInMemoryDatabase("AtHomeDb")
             );
 
-            services.AddAutoMapper(typeof(Startup));
-
-            var mapperConfig = new MapperConfiguration(mc => mc.AddProfile(new Domain.AutoMapper()));
-            services.AddSingleton(mapperConfig.CreateMapper());
-
             services.AddProblemDetails(options =>
             {
                 // Control when an exception is included
@@ -75,21 +67,17 @@ namespace AtHomeProject.Web
                 );
             });
 
-            services.AddHangfire(_ => GlobalConfiguration.Configuration.UseInMemoryStorage());
-            services.AddHangfireServer();
-
             services.AddControllers()
                 .AddNewtonsoftJson()
+                .AddXmlSerializerFormatters()
+                .AddXmlDataContractSerializerFormatters()
                 .AddFluentValidation(s =>
                     {
-                        s.RegisterValidatorsFromAssemblyContaining<SensorInputValidator>();
+                        s.RegisterValidatorsFromAssemblyContaining<UserModelValidator>();
                         s.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
                     }
-                )
-                .AddXmlSerializerFormatters()
-                .AddXmlDataContractSerializerFormatters();
+                );
 
-            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
             services.Configure<AppSettings>(Configuration.GetSection(nameof(AppSettings)));
             services.AddSwagger();
         }
@@ -97,11 +85,6 @@ namespace AtHomeProject.Web
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddSerilog(Logger);
-
-            app.UseHangfireDashboard(options: new DashboardOptions()
-            {
-                Authorization = new[] { new DashboardNoAuthorizationFilter() }
-            });
 
             app.UseSwagger();
 

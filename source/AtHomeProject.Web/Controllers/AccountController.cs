@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 namespace AtHomeProject.Web.Controllers
 {
     [ApiController]
-    [Route("Api/[controller]")]
+    [Route("v1/")]
     [Produces("application/json")]
     [Consumes("application/json")]
     public class AccountController : ControllerBase
@@ -26,80 +26,44 @@ namespace AtHomeProject.Web.Controllers
         }
 
         /// <summary>
-        /// Login smartAC device
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     {
-        ///         "serialNumber": "0d0f40f0acb74bf0958c6c6c2a7e6f1f",
-        ///         "secretKey": "fff754c711b34ccd9bf1547f2ea96049",
-        ///         "firmwareVersion": "1.0.1"
-        ///     }
-        ///
-        /// </remarks>
-        /// <param name="model"></param>
-        /// <returns>The jwt token and the serial number</returns>
-        /// <response code="200">Returns the jwt token</response>
-        /// <response code="400">If the model is null or an error occurred while was trying to authenticate</response>  
-        [HttpPost("Auth/Device")]
-        [ProducesResponseType(typeof(DeviceAuthenticateResponse), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> Authenticate(DeviceAuthenticateRequest model)
-        {
-            _logger.LogInformation(
-                $"[${nameof(AccountController)}] loging called {DateTimeOffset.UtcNow}, device serial: {model.SerialNumber}"
-            );
-
-            var result = await _service.AuthenticateAsync(model);
-
-            if (result is { })
-            {
-                _logger.LogInformation(
-                    $"[${nameof(AccountController)}] loging called {DateTimeOffset.UtcNow}, device serial: {model.SerialNumber} sucessfully authenticated."
-                );
-                return Ok(result);
-            }
-
-            _logger.LogWarning(
-                $"[${nameof(AccountController)}] loging called {DateTimeOffset.UtcNow}, device serial: {model.SerialNumber}, invalid credentials."
-            );
-
-            return BadRequest(
-                new ProblemDetails
-                {
-                    Status = StatusCodes.Status400BadRequest,
-                    Detail = "Invalid credentials"
-                }
-            );
-        }
-
-        /// <summary>
         /// Login user
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
+        ///     API1
         ///     {
-        ///         "userName": "admin",
-        ///         "password": "admin"
+        ///         "userName": "user1",
+        ///         "password": "admin1"
         ///     }
         ///
+        ///     API2
+        ///     {
+        ///         "userName": "user2",
+        ///         "password": "admin2"
+        ///     }
+        ///
+        ///     XML
+        ///     {
+        ///         "userName": "user3",
+        ///         "password": "admin3"
+        ///     }
+        /// 
         /// </remarks>
         /// <param name="model"></param>
-        /// <returns>The jwt token and the serial number</returns>
+        /// <returns>The jwt token</returns>
         /// <response code="200">Returns the jwt token</response>
         /// <response code="400">If the model is null or an error occurred while was trying to authenticate</response>  
-        [HttpPost("Auth/User")]
-        [ProducesResponseType(typeof(DeviceAuthenticateResponse), (int)HttpStatusCode.OK)]
+        [HttpPost("Auth")]
+        [ProducesResponseType(typeof(AuthResponse), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
-        public IActionResult Authenticate(UserModel model)
+        public async Task<IActionResult> Authenticate(UserModel model)
         {
             _logger.LogInformation(
                 $"[${nameof(AccountController)}] loging called {DateTimeOffset.UtcNow}, user: {model.UserName}"
             );
 
-            var result = _service.Authenticate(model);
+            var result = await _service.AuthenticateAsync(model);
 
             if (result is { })
             {

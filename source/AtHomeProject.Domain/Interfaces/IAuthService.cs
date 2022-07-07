@@ -6,8 +6,6 @@ namespace AtHomeProject.Domain.Interfaces
 {
     public interface IAuthService
     {
-        Task<DeviceAuthenticateResponse> AuthenticateAsync(DeviceAuthenticateRequest model);
-
-        UserAuthenticateResponse Authenticate(UserModel model);
+        Task<AuthResponse> AuthenticateAsync(UserModel model);
     }
 }

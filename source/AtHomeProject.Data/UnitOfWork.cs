@@ -10,37 +10,26 @@ namespace AtHomeProject.Data
         public UnitOfWork(ApplicationDbContext db) => _db = db;
 
         private readonly ApplicationDbContext _db;
-        private IRepository<Device> _deviceRepository;
-        private IRepository<SensorInput> _sensorInputRepository;
-        private IRepository<SensorAlert> _sensorAlertRepository;
+        private IRepository<Users> _usersRepository;
+        private IRepository<UsersClaims> _usersClaimRepository;
 
-        public IRepository<Device> Device
+        public IRepository<Users> Users
         {
             get
             {
-                _deviceRepository ??= new Repository<Device>(_db);
+                _usersRepository ??= new Repository<Users>(_db);
 
-                return _deviceRepository;
+                return _usersRepository;
             }
         }
 
-        public IRepository<SensorInput> SensorInput
+        public IRepository<UsersClaims> UsersClaims
         {
             get
             {
-                _sensorInputRepository ??= new Repository<SensorInput>(_db);
+                _usersClaimRepository ??= new Repository<UsersClaims>(_db);
 
-                return _sensorInputRepository;
-            }
-        }
-
-        public IRepository<SensorAlert> SensorAlert
-        {
-            get
-            {
-                _sensorAlertRepository ??= new Repository<SensorAlert>(_db);
-
-                return _sensorAlertRepository;
+                return _usersClaimRepository;
             }
         }
 

@@ -8,7 +8,7 @@ namespace AtHomeProject.Web
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterAssemblyTypes(typeof(IDeviceService).Assembly, typeof(IUnitOfWork).Assembly)
+            builder.RegisterAssemblyTypes(typeof(IShippingService).Assembly, typeof(IUnitOfWork).Assembly)
                 .Where(t => t.Name.EndsWith("Service") || t.Name.Equals("UnitOfWork"))
                 .AsImplementedInterfaces();
         }

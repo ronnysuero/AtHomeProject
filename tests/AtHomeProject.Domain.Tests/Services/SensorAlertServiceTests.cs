@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Threading.Tasks;
 using AtHomeProject.Data;
-using AtHomeProject.Data.Entities;
 using AtHomeProject.Data.Tests;
-using AtHomeProject.Domain.Models;
-using AtHomeProject.Domain.Services;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;

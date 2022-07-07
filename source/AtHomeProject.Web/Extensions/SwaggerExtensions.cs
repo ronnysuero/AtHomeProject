@@ -17,7 +17,7 @@ namespace AtHomeProject.Web.Extensions
             {
                 c.AddSecurityDefinition(
                     "Bearer",
-                    new OpenApiSecurityScheme()
+                    new OpenApiSecurityScheme
                     {
                         Name = "Authorization",
                         Type = SecuritySchemeType.ApiKey,
@@ -52,7 +52,7 @@ namespace AtHomeProject.Web.Extensions
                     {
                         Version = "v1",
                         Title = "At-Home Project: Requesting multiple API",
-                        Description = "This is the At-Home Project API",
+                        Description = "This is a POC of At-Home Project API",
                         Contact = new OpenApiContact
                         {
                             Name = "Ronny Zapata",
@@ -75,6 +75,7 @@ namespace AtHomeProject.Web.Extensions
             // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
+                c.RoutePrefix = "";
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "At-Home Project API V1");
                 c.DefaultModelExpandDepth(2);
                 c.DefaultModelRendering(ModelRendering.Model);

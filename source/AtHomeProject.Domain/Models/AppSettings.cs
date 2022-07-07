@@ -6,7 +6,5 @@ namespace AtHomeProject.Domain.Models
     public class AppSettings
     {
         public string Secret { get; set; }
-
-        public UserModel DefaultCredentials { get; set; } = new();
     }
 }

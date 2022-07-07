@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using AtHomeProject.Data.Entities;
 using Semver;
 using Xunit;
 
