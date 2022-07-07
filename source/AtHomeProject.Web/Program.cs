@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,6 +8,7 @@ using Serilog;
 
 namespace AtHomeProject.Web
 {
+    [ExcludeFromCodeCoverage]
     public class Program
     {
         public static void Main(string[] args)

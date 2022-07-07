@@ -15,9 +15,9 @@ namespace AtHomeProject.Domain.Services
 
         public CompanyService(IFedexService fedexService, IUpsService upsService, IUspsService uspsService)
         {
-            _fedexService = fedexService;
-            _upsService = upsService;
-            _uspsService = uspsService;
+            _fedexService = fedexService ?? throw new ArgumentNullException(nameof(fedexService));
+            _upsService = upsService ?? throw new ArgumentNullException(nameof(upsService));
+            _uspsService = uspsService ?? throw new ArgumentNullException(nameof(uspsService));
         }
 
         public async Task<double> CalculateShipmentAsync(

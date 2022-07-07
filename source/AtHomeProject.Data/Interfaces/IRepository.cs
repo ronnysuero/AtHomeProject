@@ -15,20 +15,7 @@ namespace AtHomeProject.Data.Interfaces
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includeProperties = ""
         );
-
-        Task<IEnumerable<TEntity>> GetAsync(
-            int page,
-            int pageSize,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null
-        );
-
-        Task<(IEnumerable<TEntity> Results, int RowCount)> GetAsync(
-            int page,
-            int pageSize,
-            Expression<Func<TEntity, bool>> filter = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null
-        );
-
+        
         Task<TEntity> GetByKeyAsync(object key);
 
         Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> filter);
@@ -40,7 +27,5 @@ namespace AtHomeProject.Data.Interfaces
         Task DeleteAsync(params object[] keys);
 
         void Delete(TEntity entityToDelete);
-
-        void Update(TEntity entityToUpdate);
     }
 }

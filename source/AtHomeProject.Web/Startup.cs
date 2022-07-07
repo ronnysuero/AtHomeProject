@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using AtHomeProject.Data;
 using AtHomeProject.Domain.Models;
@@ -22,6 +23,7 @@ using ILogger = Serilog.ILogger;
 
 namespace AtHomeProject.Web
 {
+    [ExcludeFromCodeCoverage]
     public class Startup
     {
         public Startup(IConfiguration configuration)

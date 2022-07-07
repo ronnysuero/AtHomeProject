@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AtHomeProject.Data.Entities;
 using AtHomeProject.Data.Interfaces;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AtHomeProject.Web
 {
+    [ExcludeFromCodeCoverage]
     public static class DataGenerator
     {
         public static async Task InitializeAsync(IServiceProvider serviceProvider)

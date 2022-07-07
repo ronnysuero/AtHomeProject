@@ -2,7 +2,6 @@
 using System.Net;
 using System.Threading.Tasks;
 using AtHomeProject.Domain.Interfaces;
-using AtHomeProject.Domain.Models;
 using AtHomeProject.Domain.Models.Auth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

@@ -19,22 +19,6 @@ namespace AtHomeProject.Data
             _dbSet = db.Set<TEntity>();
         }
 
-        private static async Task<IEnumerable<TEntity>> GetAsync(
-            int page,
-            int pageSize,
-            IQueryable<TEntity> query,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null
-        )
-        {
-            var skip = (page - 1) * pageSize;
-
-            var result = orderBy != null
-                ? await orderBy(query).Skip(skip).Take(pageSize).AsNoTracking().ToListAsync()
-                : await query.Skip(skip).Take(pageSize).AsNoTracking().ToListAsync();
-
-            return result;
-        }
-
         public Task<int> CountAsync => _dbSet.CountAsync();
 
         public async Task<IEnumerable<TEntity>> GetAsync(
@@ -52,29 +36,6 @@ namespace AtHomeProject.Data
                 .Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
 
             return orderBy != null ? await orderBy(query).ToListAsync() : await query.ToListAsync();
-        }
-
-        public async Task<IEnumerable<TEntity>> GetAsync(
-            int page,
-            int pageSize,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null
-        ) => await GetAsync(page, pageSize, _dbSet.AsQueryable(), orderBy);
-
-        public async Task<(IEnumerable<TEntity> Results, int RowCount)> GetAsync(
-            int page,
-            int pageSize,
-            Expression<Func<TEntity, bool>> filter = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null
-        )
-        {
-            var query = _dbSet.AsQueryable();
-
-            if (filter != null)
-                query = query.Where(filter);
-
-            var count = query.Count();
-
-            return (await GetAsync(page, pageSize, query, orderBy), count);
         }
 
         public async Task<TEntity> GetByKeyAsync(object key) => await _dbSet.FindAsync(key);
@@ -98,12 +59,6 @@ namespace AtHomeProject.Data
                 _dbSet.Attach(entityToDelete);
 
             _dbSet.Remove(entityToDelete);
-        }
-
-        public void Update(TEntity entityToUpdate)
-        {
-            _dbSet.Attach(entityToUpdate);
-            _db.Entry(entityToUpdate).State = EntityState.Modified;
         }
     }
 }

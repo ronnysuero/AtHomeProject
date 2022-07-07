@@ -1,5 +1,8 @@
-﻿namespace AtHomeProject.Web
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace AtHomeProject.Web
 {
+    [ExcludeFromCodeCoverage]
     public static class Constants
     {
         public const string API_JSON1 = "API_JSON1";

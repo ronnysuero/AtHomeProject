@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace AtHomeProject.Data.Entities
 {
+    [ExcludeFromCodeCoverage]
     public class UsersClaims
     {
         [Key]

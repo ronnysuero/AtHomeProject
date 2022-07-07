@@ -2,13 +2,12 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AtHomeProject.Data;
+using AtHomeProject.Data.Entities;
 using AtHomeProject.Data.Tests;
 using AtHomeProject.Domain.Models;
 using AtHomeProject.Domain.Models.Auth;
 using AtHomeProject.Domain.Services;
-using AutoMapper;
 using Microsoft.Extensions.Options;
-using Semver;
 using Xunit;
 
 namespace AtHomeProject.Domain.Tests.Services
@@ -27,41 +26,35 @@ namespace AtHomeProject.Domain.Tests.Services
             // Assert
             Assert.Throws<ArgumentNullException>(() =>
                 // Act
-                new DeviceService(null, null)
+                new AuthService(null, null)
             );
         }
 
         [Fact]
-        public async Task AuthenticateAsync_Should_GetValidTokenWhenDeviceCredentialsAreValid()
+        public async Task AuthenticateAsync_Should_GetValidTokenWhenCredentialsAreValid()
         {
             // Arrange
-            var device = new DeviceModel
+            var user = new Users
             {
-                SerialNumber = "0d0f40f0acb74bf0958c6c6c2a7e6f1f",
-                SecretKey = "fff754c711b34ccd9bf1547f2ea96049",
-                FirmwareVersion = SemVersion.Parse("1.0.0", SemVersionStyles.Strict)
+                Id = 1,
+                Username = "Username",
+                Password = "Password"
             };
 
-            var mapperConfig = new MapperConfiguration(conf => conf.AddProfile<AutoMapper>());
             var unitOfWork = new UnitOfWork(SharedDatabaseFixture.CreateContext());
-            var deviceService = new DeviceService(new Mapper(mapperConfig), unitOfWork);
+            var options = Options.Create(new AppSettings { Secret = "random secret key" });
 
-
-            await deviceService.InsertAsync(device);
-
-            var options = Options.Create(new AppSettings
-            {
-                Secret = "random secret key"
-            });
+            await unitOfWork.Users.InsertAsync(user);
+            await unitOfWork.SaveAsync();
 
             var authService = new AuthService(unitOfWork, options);
 
             // Act
             var result = await authService.AuthenticateAsync(
-                new DeviceAuthenticateRequest
+                new()
                 {
-                    SerialNumber = "0d0f40f0acb74bf0958c6c6c2a7e6f1f",
-                    SecretKey = "fff754c711b34ccd9bf1547f2ea96049"
+                    UserName = "Username",
+                    Password = "Password"
                 }
             );
 
@@ -71,23 +64,19 @@ namespace AtHomeProject.Domain.Tests.Services
         }
 
         [Fact]
-        public async Task AuthenticateAsync_Should_ReturnsNullWhenDeviceCredentialsAreInvalid()
+        public async Task AuthenticateAsync_Should_ReturnsNullWhenCredentialsAreInvalid()
         {
             // Arrange
-            var options = Options.Create(new AppSettings
-            {
-                Secret = "random secret key"
-            });
-
+            var options = Options.Create(new AppSettings { Secret = "random secret key" });
             var unitOfWork = new UnitOfWork(SharedDatabaseFixture.CreateContext());
             var authService = new AuthService(unitOfWork, options);
 
             // Act
             var result = await authService.AuthenticateAsync(
-                new DeviceAuthenticateRequest
+                new()
                 {
-                    SerialNumber = "0d0f40f0acb74bf0958c6c6c2a7e6f1f",
-                    SecretKey = "fff754c711b34ccd9bf1547f2ea96049"
+                    UserName = "Username",
+                    Password = "Password"
                 }
             );
 
@@ -96,38 +85,7 @@ namespace AtHomeProject.Domain.Tests.Services
         }
 
         [Fact]
-        public void Authenticate_Should_GetValidTokenWhenUserCredentialsAreValid()
-        {
-            // Arrange
-            var user = new UserModel
-            {
-                UserName = "john-doe",
-                Password = "123456"
-            };
-
-            var options = Options.Create(new AppSettings
-            {
-                Secret = "random secret key",
-                DefaultCredentials = new UserModel
-                {
-                    UserName = "john-doe",
-                    Password = "123456"
-                }
-            });
-
-            var unitOfWork = new UnitOfWork(SharedDatabaseFixture.CreateContext());
-            var authService = new AuthService(unitOfWork, options);
-
-            // Act
-            var result = authService.Authenticate(user);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.NotNull(result.Token);
-        }
-
-        [Fact]
-        public void Authenticate_Should_ReturnsNullWhenUserCredentialsAreInvalid()
+        public async Task Authenticate_Should_ReturnsNullWhenUserCredentialsAreInvalid()
         {
             // Arrange
             var user = new UserModel
@@ -145,7 +103,7 @@ namespace AtHomeProject.Domain.Tests.Services
             var authService = new AuthService(unitOfWork, options);
 
             // Act
-            var result = authService.Authenticate(user);
+            var result = await authService.AuthenticateAsync(user);
 
             // Assert
             Assert.Null(result);

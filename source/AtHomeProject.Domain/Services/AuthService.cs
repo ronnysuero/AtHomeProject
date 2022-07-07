@@ -32,7 +32,7 @@ namespace AtHomeProject.Domain.Services
                     f.Password == model.Password //TODO: password should be hashed
             );
 
-            // return null if device not found
+            // return null if user not found
             if (user == null)
                 return null;
 

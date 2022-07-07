@@ -69,7 +69,7 @@ namespace AtHomeProject.Web.Auth
 
                 if (!string.IsNullOrWhiteSpace(value))
                 {
-                    // attach device to context on successful jwt validation
+                    // attach user to context on successful jwt validation
                     TryParse(value, out var userId);
                     context.Items["User"] = await _unitOfWork.Users.FindAsync(f => f.Id == userId);
                     context.Items["UserClaims"] = await _unitOfWork.UsersClaims.GetAsync(f => f.UserId == userId);
